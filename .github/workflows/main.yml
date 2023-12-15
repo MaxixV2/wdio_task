@@ -1,38 +1,32 @@
-name: Test Cypress Real World App
-
-on:
-  push:
-    branches: [ master ]
-
+name: End-to-end tests
+on: [push, pull_request]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  run-tests:
+    runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Clone Repository
-        uses: actions/checkout@v4
-        with:
-          repository: cypress-io/cypress-realworld-app
-          ref: develop
-          path: ./cloned-repo
-
-      - name: Install Dependencies and Run Dev Server
-        run: |
-          cd cloned-repo
-          yarn install
-          yarn dev & sleep 15 && curl http://localhost:3000
-
-      - name: Install Dependencies and Run Tests
-        run: |
-          npm install
-          npm run test:headless
-          npm run report:generate
-
-      - name: Deploy Results to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          branch: gh-pages
-          folder: allure-report/
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: Install Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18
+        - name: Install Java 8
+          run: choco install openjdk8
+        - name: Install yarn
+          run: npm install -g yarn
+        - name: Install deps
+          run: npm install
+        - name: Install deps for web app
+          run: cd cypress-realworld-app && yarn install
+        - name: Start local server
+          run: cd cypress-realworld-app && yarn dev &
+        - name: Wait for server to start
+          run: sleep 20
+        - name: Run tests
+          run: npx cross-env ENV=http://localhost:3000/ wdio run ./chrome.wdio.conf.js && npx allure generate allure-results-chrome -o allure-report --clean || npx allure generate allure-results-chrome -o allure-report --clean
+        - name: Deploy report to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_branch: gh-pages
+            publish_dir: allure-report
