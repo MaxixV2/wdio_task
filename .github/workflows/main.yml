@@ -17,7 +17,7 @@ jobs:
         with:
           repository: cypress-io/cypress-realworld-app
           ref: develop
-          path: ./cypress-realworld-app/
+          path: ./cloned-repo
 
       - name: Install Dependencies and Run Dev Server
         run: |
