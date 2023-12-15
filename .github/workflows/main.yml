@@ -30,21 +30,9 @@ jobs:
           npm install
           npm run test:headless
           npm run report:generate
-      - name: Create Report
-        if: always()
-        run: npm run allure:generate
-      - name: Upload artifact allure-report
-        uses: actions/upload-artifact@v1
-        if: always()
-        with:
-              name: allure-report
-              path: ./allure-report
-      - name: Deploy report
-        uses: JamesIves/github-pages-deploy-action@3.1.0
-        if: always()
-        with:
-              ACCESS_TOKEN: ${{'secrets.ACCESS_TOKEN'}}
-              BRANCH: master
-              FOLDER: allure-report
-              TARGET_FOLDER: docs
 
+      - name: Deploy Results to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: allure-report/
