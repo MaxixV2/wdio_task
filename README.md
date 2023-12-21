@@ -15,7 +15,12 @@ This repository is created for automation testing of Cypress Real World App usin
    npm install
    ```
    
-2. Change directory to install dependencies for web application:
+2. Clone repository with application for testing.
+   ```bash
+   git clone https://github.com/cypress-io/cypress-realworld-app.git
+   ```
+   
+3. Change directory to install dependencies for web application:
    ```bash
    cd .\cypress-realworld-app\
    ```
@@ -25,7 +30,7 @@ This repository is created for automation testing of Cypress Real World App usin
    yarn install
    ```
 
-6. Run the web application.
+5. Run the web application.
    ```bash
     yarn dev
     ```
